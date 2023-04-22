@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+multiwoz/
+ckpt/
+sh_folder/
+inference_result/
+*.sh
 # C extensions
 *.so
 
