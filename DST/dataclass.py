@@ -114,14 +114,14 @@ class DSTMultiWozData:
         else:
             raise Exception('Wrong Data Mode!!!')
 
-        dev_json_path = '/home/jihyunlee/pptod/data/multiwoz/data/multi-woz-fine-processed/multiwoz-fine-processed-dev.json'
+        dev_json_path = '/home/jihyunlee/tod_model/multiwoz/data/multi-woz-fine-processed/multiwoz-fine-processed-dev.json'
         with open(dev_json_path) as f:
             dev_raw_data = json.load(f)
         print ('Tokenizing raw dev data...')
         dev_data_id_list = self.tokenize_raw_data(dev_raw_data)
         self.dev_data_list = self.flatten_data(dev_data_id_list)
 
-        test_json_path = '/home/jihyunlee/pptod/data/multiwoz/data/multi-woz-fine-processed/multiwoz-fine-processed-test.json'
+        test_json_path = '/home/jihyunlee/tod_model/multiwoz/data/multi-woz-fine-processed/multiwoz-fine-processed-test.json'
         if self.pseudo_data:
             test_json_path = self.pseudo_data
             print(f"pseudo labeling for {self.pseudo_data}")
@@ -408,6 +408,7 @@ class DSTMultiWozData:
         res_dict['turn_num'] = one_instance['turn_num']
         res_dict['user'] = self.parse_id_to_text(one_instance['user'])
         res_dict['bspn'] = self.parse_id_to_text(one_instance['bspn'])
+        res_dict['resp'] = self.parse_id_to_text(one_instance['resp'])
         previous_context = one_instance['prev_context']
         curr_user_input = one_instance['user']
 

@@ -145,5 +145,5 @@ if __name__ == '__main__':
         import json
         with open(output_save_path, 'w') as outfile:
             json.dump(all_dev_result, outfile, indent=4)
-    print(f"the number of data{all_dev_result}")
+    print(f"the number of data{len(all_dev_result)}")
     print ('Evaluation Completed!')

@@ -67,4 +67,10 @@ def batch_generate(model, one_inference_batch, data):
         one_bs_text = batch_bs_text[idx]
         res_batch_parse_dict[idx]['bspn_gen'] = one_bs_text
         res_batch_parse_dict[idx]['bspn'] = one_bs_text
+        
+        
+        res_batch_parse_dict[idx]['user'] = "<sos_u> " + res_batch_parse_dict[idx]['user'] + " <eos_u>" 
+        res_batch_parse_dict[idx]['bspn'] = "<sos_b> " + res_batch_parse_dict[idx]['bspn'] + " <eos_b>" 
+        res_batch_parse_dict[idx]['bspn_gen'] = "<sos_b> " + res_batch_parse_dict[idx]['bspn_gen'] + " <eos_b>" 
+        res_batch_parse_dict[idx]['resp'] = "<sos_r> " + res_batch_parse_dict[idx]['resp'] + " <eos_r>"
     return res_batch_parse_dict
