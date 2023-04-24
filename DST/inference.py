@@ -44,6 +44,7 @@ def parse_config():
     parser.add_argument("--number_of_gpu", type=int, default=8, help="Number of available GPUs.")  
     parser.add_argument("--output_save_path", type=str, help="directory to save the model output.")
     parser.add_argument("--pseudo_data", type=str, help="directory to save the model output.")
+    parser.add_argument("--pseudo_labeling", type=int, default = 0, help="pseudo labeling or not")
     return parser.parse_args()
 
 import argparse
@@ -125,7 +126,7 @@ if __name__ == '__main__':
             if p_dev_idx%10 ==0:
                 print(p_dev_idx)
             one_inference_batch = dev_batch_list[p_dev_idx]
-            dev_batch_parse_dict = batch_generate(model, one_inference_batch, data)
+            dev_batch_parse_dict = batch_generate(model, one_inference_batch, data, args.pseudo_labeling)
             for item in dev_batch_parse_dict:
                 all_dev_result.append(item)
 

@@ -13,7 +13,7 @@ all_eos_token_list = ['<eos_b>', '<eos_a>', '<eos_r>']
 
 class DSTMultiWozData:
     def __init__(self, model_name, tokenizer, data_path_prefix, seed = 1, pseudo_data = None, shuffle_mode='shuffle_session_level', 
-        data_mode='train', add_prefix=True, add_special_decoder_token=True, train_data_ratio=1.0):
+        data_mode='train', add_prefix=True, add_special_decoder_token=True, train_data_ratio=1.0, train_file_name = None):
         '''
             model_name: t5-small or t5-base or t5-large
 
@@ -77,6 +77,8 @@ class DSTMultiWozData:
         import json
         if data_mode == 'train':
             train_json_path = data_path_prefix + '/multiwoz-fine-processed-train.json'
+            if train_file_name != None:
+                train_json_path = data_path_prefix + train_file_name
             with open(train_json_path) as f:
                 train_raw_data = json.load(f)
 

@@ -40,7 +40,7 @@ def erase_error(text):
     text = re.sub(r"\[value-", r"[value_", text)
     return text
 
-def batch_generate(model, one_inference_batch, data):
+def batch_generate(model, one_inference_batch, data, pseudo_labeling = False):
     is_cuda = next(model.parameters()).is_cuda
     if is_cuda: 
         #device = next(model.parameters()).device
@@ -65,12 +65,14 @@ def batch_generate(model, one_inference_batch, data):
     batch_bs_text = model.batch_generate(bs_tensor, bs_mask, generate_mode='bs', max_decode_len=max_response_len)
     for idx in range(batch_size):
         one_bs_text = batch_bs_text[idx]
+                
         res_batch_parse_dict[idx]['bspn_gen'] = one_bs_text
-        res_batch_parse_dict[idx]['bspn'] = one_bs_text
-        
-        
-        res_batch_parse_dict[idx]['user'] = "<sos_u> " + res_batch_parse_dict[idx]['user'] + " <eos_u>" 
-        res_batch_parse_dict[idx]['bspn'] = "<sos_b> " + res_batch_parse_dict[idx]['bspn'] + " <eos_b>" 
-        res_batch_parse_dict[idx]['bspn_gen'] = "<sos_b> " + res_batch_parse_dict[idx]['bspn_gen'] + " <eos_b>" 
-        res_batch_parse_dict[idx]['resp'] = "<sos_r> " + res_batch_parse_dict[idx]['resp'] + " <eos_r>"
+        if pseudo_labeling:
+            res_batch_parse_dict[idx]['bspn'] = one_bs_text
+            
+            
+            res_batch_parse_dict[idx]['user'] = "<sos_u> " + res_batch_parse_dict[idx]['user'] + " <eos_u>" 
+            res_batch_parse_dict[idx]['bspn'] = "<sos_b> " + res_batch_parse_dict[idx]['bspn'] + " <eos_b>" 
+            res_batch_parse_dict[idx]['bspn_gen'] = "<sos_b> " + res_batch_parse_dict[idx]['bspn_gen'] + " <eos_b>" 
+            res_batch_parse_dict[idx]['resp'] = "<sos_r> " + res_batch_parse_dict[idx]['resp'] + " <eos_r>"
     return res_batch_parse_dict
