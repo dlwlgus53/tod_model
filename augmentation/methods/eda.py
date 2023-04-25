@@ -57,7 +57,7 @@ def get_only_chars(line):
     line = line.lower()
 
     for char in line:
-        if char in 'qwertyuiopasdfghjklzxcvbnm ':
+        if char in 'qwertyuiopasdfghjklzxcvbnm 1234567890:':
             clean_line += char
         else:
             clean_line += ' '
@@ -187,7 +187,7 @@ def add_word(new_words):
 
 def eda(sentence, alpha_sr=0.2, alpha_ri=0.2, alpha_rs=0.2, p_rd=0.2, num_aug=1):
 	
-    sentence = get_only_chars(sentence)
+    # sentence = get_only_chars(sentence) # numbers are also delted
     words = sentence.split(' ')
     words = [word for word in words if word != '']
     num_words = len(words)
@@ -196,28 +196,28 @@ def eda(sentence, alpha_sr=0.2, alpha_ri=0.2, alpha_rs=0.2, p_rd=0.2, num_aug=1)
     num_new_per_technique = int(num_aug/4)+1
 
     #sr
-    if (alpha_sr > 0):
+    if (alpha_sr > 0): #rnadom sysnnym replace
         n_sr = max(1, int(alpha_sr*num_words))
         for _ in range(num_new_per_technique):
             a_words = synonym_replacement(words, n_sr)
             augmented_sentences.append(' '.join(a_words))
 
     #ri
-    if (alpha_ri > 0):
+    if (alpha_ri > 0): # random insertion
         n_ri = max(1, int(alpha_ri*num_words))
         for _ in range(num_new_per_technique):
             a_words = random_insertion(words, n_ri)
             augmented_sentences.append(' '.join(a_words))
 
     #rs
-    if (alpha_rs > 0):
+    if (alpha_rs > 0): # random swap
         n_rs = max(1, int(alpha_rs*num_words))
         for _ in range(num_new_per_technique):
             a_words = random_swap(words, n_rs)
             augmented_sentences.append(' '.join(a_words))
 
     #rd
-    if (p_rd > 0):
+    if (p_rd > 0): # random deletion
         for _ in range(num_new_per_technique):
             a_words = random_deletion(words, p_rd)
             augmented_sentences.append(' '.join(a_words))

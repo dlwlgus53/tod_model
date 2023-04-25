@@ -63,13 +63,21 @@ def batch_generate(model, one_inference_batch, data, pseudo_labeling = False):
         bs_tensor = bs_tensor.cuda(device)
         bs_mask = bs_mask.cuda(device)
     batch_bs_text = model.batch_generate(bs_tensor, bs_mask, generate_mode='bs', max_decode_len=max_response_len)
+    
+    try:
+        batch_bs_text, confidence = model.batch_generate(bs_tensor, bs_mask, generate_mode='bs', max_decode_len=max_response_len, return_confidence = True)
+    except:
+        batch_bs_text, confidence = model.module.batch_generate(bs_tensor, bs_mask, generate_mode='bs', max_decode_len=max_response_len, return_confidence = True)
+        
+        
+        
     for idx in range(batch_size):
         one_bs_text = batch_bs_text[idx]
-                
         res_batch_parse_dict[idx]['bspn_gen'] = one_bs_text
+        res_batch_parse_dict[idx]['confidence'] = confidence[idx]
+        
         if pseudo_labeling:
             res_batch_parse_dict[idx]['bspn'] = one_bs_text
-            
             
             res_batch_parse_dict[idx]['user'] = "<sos_u> " + res_batch_parse_dict[idx]['user'] + " <eos_u>" 
             res_batch_parse_dict[idx]['bspn'] = "<sos_b> " + res_batch_parse_dict[idx]['bspn'] + " <eos_b>" 

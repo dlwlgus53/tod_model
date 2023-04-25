@@ -1,8 +1,9 @@
 import os, sys, json
 import random, argparse
-from eda import run_eda
 import pdb
 from tqdm import tqdm
+import copy 
+import random
 
 def init_experiment(seed):
     random.seed(seed)
@@ -16,16 +17,36 @@ def parse_config():
     return parser.parse_args()
     
 if __name__ == '__main__':
+    random.seed(1)
     args = parse_config()
     init_experiment(args.seed)
+    augmentor = None
     if args.method == 'eda':
-        augmentor = run_eda
+        from methods.eda import run_eda
+        augmentor = run_eda    
+    elif args.method == 'aeda':
+        from methods.aeda import run_aeda
+        augmentor = run_aeda    
+    elif args.method == 'bt':
+        from methods.bt import run_bt
+        augmentor = run_bt
+    else:
+        raise Exception('Wrong method option')
+    
     org = json.load(open(args.train_data_path, "r"))
-    for dial in tqdm(org):
+    aug = copy.deepcopy(org)
+
+    for dial in tqdm(aug):
         for turn in dial:
+            turn['dial_id'] = turn['dial_id'] + "_aug1"
             user = turn['user'].replace("<sos_u> ","").replace(" <eos_u>","").strip()
-            new_user = '<sos_u> ' + run_eda(user) + ' <eos_u>'
+            new_user = '<sos_u> ' + augmentor(user) + ' <eos_u>'
             turn['user'] = new_user
             
-    with open(args.save_data_path, 'w') as f: json.dump(org, f, ensure_ascii=False, indent=4)
+    # concat org and aug        
+    org_aug = org+aug
+    
+    # shuffle
+    random.shuffle(org_aug)
+    with open(args.save_data_path, 'w') as f: json.dump(org_aug, f, ensure_ascii=False, indent=4)
     

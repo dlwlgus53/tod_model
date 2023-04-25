@@ -79,6 +79,7 @@ class DSTMultiWozData:
             train_json_path = data_path_prefix + '/multiwoz-fine-processed-train.json'
             if train_file_name != None:
                 train_json_path = data_path_prefix + train_file_name
+            print(f"train with {train_json_path} data")
             with open(train_json_path) as f:
                 train_raw_data = json.load(f)
 
